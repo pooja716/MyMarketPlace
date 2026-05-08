@@ -7,16 +7,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.mymarketplace.R
 import com.example.mymarketplace.ui.theme.Dimens
+import com.example.mymarketplace.ui.theme.OfflineDot
+import com.example.mymarketplace.ui.theme.OnlineDot
 
 @Composable
 fun TopBar(isOnline: Boolean) {
     Row(
-        Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 14.dp, vertical = 10.dp),
+        Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = Dimens.size14, vertical = Dimens.size10),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -31,7 +31,7 @@ fun TopBar(isOnline: Boolean) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.size6)) {
             Box(
                 Modifier.size(Dimens.size8).background(
-                    color = if (isOnline) Color(0xFF1D9E75) else Color(0xFFE24B4A),
+                    color = if (isOnline) OnlineDot else OfflineDot,
                     shape = CircleShape
                 )
             )

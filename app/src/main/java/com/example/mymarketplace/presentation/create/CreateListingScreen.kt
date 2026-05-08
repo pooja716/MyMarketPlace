@@ -29,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -117,7 +116,7 @@ fun CreateListingScreen(
                     .height(Dimens.size200)
                     .clip(RoundedCornerShape(Dimens.size12))
                     .border(
-                        1.dp,
+                        Dimens.size1,
                         MaterialTheme.colorScheme.outlineVariant,
                         RoundedCornerShape(Dimens.size12)
                     )
@@ -245,7 +244,7 @@ fun CreateListingScreen(
                 if (isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(Dimens.size20),
-                        strokeWidth = 2.dp,
+                        strokeWidth = Dimens.size2,
                         color = Color.White
                     )
                 } else {

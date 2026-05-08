@@ -12,10 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.mymarketplace.R
 import com.example.mymarketplace.presentation.common.UiSyncStatus
 import com.example.mymarketplace.ui.theme.Dimens
+import com.example.mymarketplace.ui.theme.OfflineBannerBackground
+import com.example.mymarketplace.ui.theme.OfflineBannerTint
+import com.example.mymarketplace.ui.theme.SyncingBannerBackground
+import com.example.mymarketplace.ui.theme.SyncingBannerTint
 
 @Composable
 fun SyncStatusBanner(isOnline: Boolean, syncStatus: UiSyncStatus) {
@@ -26,11 +29,11 @@ fun SyncStatusBanner(isOnline: Boolean, syncStatus: UiSyncStatus) {
     ) {
         val (bg, tint, icon, text) = when {
             !isOnline -> BannerConfig(
-                Color(0xFFFCEBEB), Color(0xFFA32D2D),
+                OfflineBannerBackground, OfflineBannerTint,
                 Icons.Default.WifiOff, stringResource(R.string.banner_offline)
             )
             else -> BannerConfig(
-                Color(0xFFE1F5EE), Color(0xFF085041),
+                SyncingBannerBackground, SyncingBannerTint,
                 Icons.Default.Sync, stringResource(R.string.banner_syncing)
             )
         }
@@ -43,11 +46,11 @@ fun SyncStatusBanner(isOnline: Boolean, syncStatus: UiSyncStatus) {
                 if (syncStatus == UiSyncStatus.SYNCING) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(Dimens.size14),
-                        strokeWidth = 2.dp,
+                        strokeWidth = Dimens.size2,
                         color = tint
                     )
                 } else {
-                    Icon(icon, null, tint = tint, modifier = Modifier.size(15.dp))
+                    Icon(icon, null, tint = tint, modifier = Modifier.size(Dimens.size15))
                 }
                 Text(text, style = MaterialTheme.typography.labelMedium, color = tint)
             }

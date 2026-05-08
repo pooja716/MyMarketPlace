@@ -12,12 +12,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
@@ -27,6 +25,10 @@ import com.example.mymarketplace.R
 import com.example.mymarketplace.domain.model.Listing
 import com.example.mymarketplace.domain.model.SyncStatus
 import com.example.mymarketplace.ui.theme.Dimens
+import com.example.mymarketplace.ui.theme.FavoriteIconTint
+import com.example.mymarketplace.ui.theme.PendingBadgeBackground
+import com.example.mymarketplace.ui.theme.PendingBadgeText
+import com.example.mymarketplace.ui.theme.PriceText
 
 @Composable
 fun ListingCard(
@@ -38,7 +40,7 @@ fun ListingCard(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth().aspectRatio(0.75f),
         shape = RoundedCornerShape(Dimens.size12),
-        border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.outlineVariant)
+        border = BorderStroke(Dimens.size1, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Box {
             AsyncImage(
@@ -58,15 +60,15 @@ fun ListingCard(
                 Surface(
                     modifier = Modifier.align(Alignment.TopStart).padding(Dimens.size6),
                     shape = RoundedCornerShape(Dimens.size4),
-                    color = Color(0xFFFAC775)
+                    color = PendingBadgeBackground
                 ) {
                     Text(
                         stringResource(R.string.badge_pending),
-                        modifier = Modifier.padding(horizontal = Dimens.size6, vertical = 2.dp),
+                        modifier = Modifier.padding(horizontal = Dimens.size6, vertical = Dimens.size2),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontSize = 10.sp,
                             letterSpacing = 0.4.sp,
-                            color = Color(0xFF633806)
+                            color = PendingBadgeText
                         )
                     )
                 }
@@ -90,7 +92,7 @@ fun ListingCard(
                         else Icons.Default.FavoriteBorder,
                         contentDescription = if (listing.isFavorite) stringResource(R.string.cd_unfavorite)
                         else stringResource(R.string.cd_favorite),
-                        tint = if (listing.isFavorite) Color(0xFFD85A30)
+                        tint = if (listing.isFavorite) FavoriteIconTint
                         else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(Dimens.size16)
                     )
@@ -98,7 +100,7 @@ fun ListingCard(
             }
         }
 
-        Column(Modifier.padding(start = 10.dp, end = 10.dp, top = Dimens.size8, bottom = 10.dp)) {
+        Column(Modifier.padding(start = Dimens.size10, end = Dimens.size10, top = Dimens.size8, bottom = Dimens.size10)) {
             Text(
                 listing.title,
                 maxLines = 1,
@@ -116,7 +118,7 @@ fun ListingCard(
             Text(
                 "$${listing.price}",
                 style = MaterialTheme.typography.titleSmall,
-                color = Color(0xFF0F6E56)
+                color = PriceText
             )
         }
     }

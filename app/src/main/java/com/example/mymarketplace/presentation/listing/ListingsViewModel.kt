@@ -2,12 +2,8 @@ package com.example.mymarketplace.presentation.listing
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import com.example.mymarketplace.data.service.SyncWorker
 import com.example.mymarketplace.domain.model.Listing
+import com.example.mymarketplace.domain.scheduler.SyncScheduler
 import com.example.mymarketplace.domain.usecase.ObserveListingsUseCase
 import com.example.mymarketplace.domain.usecase.RefreshListingsUseCase
 import com.example.mymarketplace.domain.usecase.SyncPendingListingsUseCase
@@ -25,8 +21,8 @@ class ListingsViewModel @Inject constructor(
     private val toggleFavorite: ToggleFavoriteUseCase,
     private val refreshListings: RefreshListingsUseCase,
     private val syncPendingListings: SyncPendingListingsUseCase,
-    private val connectivityObserver: ConnectivityObserver,
-    private val workManager: WorkManager
+    private val syncScheduler: SyncScheduler,
+    private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
     private val _listings = MutableStateFlow<List<Listing>>(emptyList())
@@ -45,9 +41,7 @@ class ListingsViewModel @Inject constructor(
 
         viewModelScope.launch {
             refreshListings()
-            if (connectivityObserver.isOnline()) {
-                runSync()
-            }
+            if (connectivityObserver.isOnline()) runSync()
         }
 
         connectivityObserver.observe()
@@ -60,21 +54,12 @@ class ListingsViewModel @Inject constructor(
     }
 
     fun onFavoriteToggle(id: String) {
-        viewModelScope.launch {
-            toggleFavorite(id)
-        }
+        viewModelScope.launch { toggleFavorite(id) }
     }
 
     fun triggerSync() {
         viewModelScope.launch { runSync() }
-
-        workManager.enqueue(
-            OneTimeWorkRequestBuilder<SyncWorker>()
-                .setConstraints(
-                    Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-                )
-                .build()
-        )
+        syncScheduler.scheduleSync()
     }
 
     private suspend fun runSync() {

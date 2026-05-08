@@ -21,11 +21,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
@@ -34,6 +32,10 @@ import coil3.request.crossfade
 import com.example.mymarketplace.R
 import com.example.mymarketplace.domain.model.SyncStatus
 import com.example.mymarketplace.ui.theme.Dimens
+import com.example.mymarketplace.ui.theme.FavoriteIconTint
+import com.example.mymarketplace.ui.theme.PendingBadgeBackground
+import com.example.mymarketplace.ui.theme.PendingBadgeText
+import com.example.mymarketplace.ui.theme.PriceText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +65,7 @@ fun ListingDetailScreen(
                             Icon(
                                 imageVector = if (l.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                                 contentDescription = if (l.isFavorite) stringResource(R.string.cd_unfavorite) else stringResource(R.string.cd_favorite),
-                                tint = if (l.isFavorite) Color(0xFFD85A30) else MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = if (l.isFavorite) FavoriteIconTint else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -90,9 +92,7 @@ fun ListingDetailScreen(
                         .build(),
                     contentDescription = item.title,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(Dimens.size260)
+                    modifier = Modifier.fillMaxWidth().height(Dimens.size260)
                 )
 
                 Column(Modifier.padding(Dimens.size16), verticalArrangement = Arrangement.spacedBy(Dimens.size8)) {
@@ -109,20 +109,20 @@ fun ListingDetailScreen(
                         Text(
                             "$${item.price}",
                             style = MaterialTheme.typography.headlineSmall,
-                            color = Color(0xFF0F6E56)
+                            color = PriceText
                         )
                     }
 
                     if (item.syncStatus != SyncStatus.SYNCED) {
                         Surface(
                             shape = RoundedCornerShape(Dimens.size4),
-                            color = Color(0xFFFAC775)
+                            color = PendingBadgeBackground
                         ) {
                             Text(
                                 stringResource(R.string.label_pending_sync),
                                 modifier = Modifier.padding(horizontal = Dimens.size8, vertical = Dimens.size4),
                                 style = MaterialTheme.typography.labelSmall,
-                                color = Color(0xFF633806)
+                                color = PendingBadgeText
                             )
                         }
                     }

@@ -2,13 +2,16 @@ package com.example.mymarketplace.data.repository
 
 import com.example.mymarketplace.data.local.dao.ListingDao
 import com.example.mymarketplace.data.local.entity.ListingEntity
+import com.example.mymarketplace.data.mapper.toDomain
+import com.example.mymarketplace.data.mapper.toEntity
+import com.example.mymarketplace.data.mapper.toSyncedEntity
 import com.example.mymarketplace.data.remote.api.MarketplaceApi
 import com.example.mymarketplace.data.remote.dto.CreateListingDto
 import com.example.mymarketplace.data.remote.dto.UpdateListingDto
 import com.example.mymarketplace.domain.model.CreateListingInput
 import com.example.mymarketplace.domain.model.Listing
-import com.example.mymarketplace.domain.model.SyncStatus
 import com.example.mymarketplace.domain.model.PendingAction
+import com.example.mymarketplace.domain.model.SyncStatus
 import com.example.mymarketplace.domain.repository.ListingRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -21,13 +24,11 @@ class ListingRepositoryImpl @Inject constructor(
 ) : ListingRepository {
 
     override fun observeListings(): Flow<List<Listing>> {
-        return dao.observeListings().map { entities ->
-            entities.map { it.toListing() }
-        }
+        return dao.observeListings().map { entities -> entities.map { it.toDomain() } }
     }
 
     override suspend fun getListingById(id: String): Listing? {
-        return dao.getListingById(id)?.toListing()
+        return dao.getListingById(id)?.toDomain()
     }
 
     override suspend fun createListing(input: CreateListingInput): Result<Listing> {
@@ -45,26 +46,28 @@ class ListingRepositoryImpl @Inject constructor(
                 updatedAt = System.currentTimeMillis()
             )
             dao.insertListing(entity)
-            Result.success(entity.toListing())
+            Result.success(entity.toDomain())
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
     override suspend fun insertListing(listing: Listing) {
-        val entity = listing.toEntity().copy(
-            syncStatus = SyncStatus.PENDING_CREATE,
-            pendingAction = PendingAction.CREATE
+        dao.insertListing(
+            listing.toEntity().copy(
+                syncStatus = SyncStatus.PENDING_CREATE,
+                pendingAction = PendingAction.CREATE
+            )
         )
-        dao.insertListing(entity)
     }
 
     override suspend fun updateListing(listing: Listing) {
-        val entity = listing.toEntity().copy(
-            syncStatus = SyncStatus.PENDING_UPDATE,
-            pendingAction = PendingAction.UPDATE
+        dao.insertListing(
+            listing.toEntity().copy(
+                syncStatus = SyncStatus.PENDING_UPDATE,
+                pendingAction = PendingAction.UPDATE
+            )
         )
-        dao.insertListing(entity)
     }
 
     override suspend fun deleteListing(id: String) {
@@ -82,22 +85,10 @@ class ListingRepositoryImpl @Inject constructor(
             val entities = response.listings.mapNotNull { dto ->
                 val existing = existingMap[dto.id]
                 if (existing != null && existing.syncStatus != SyncStatus.SYNCED) return@mapNotNull null
-                ListingEntity(
-                    id = dto.id,
-                    title = dto.title,
-                    description = dto.description,
-                    price = dto.price,
-                    imageUrl = dto.imageUrl,
-                    localImagePath = existing?.localImagePath,
-                    isFavorite = existing?.isFavorite ?: dto.isFavorite,
-                    syncStatus = SyncStatus.SYNCED,
-                    pendingAction = null,
-                    updatedAt = dto.updatedAt
-                )
+                dto.toEntity(existing)
             }
             dao.insertAll(entities)
-        } catch (_: Exception) {
-        }
+        } catch (_: Exception) { }
     }
 
     override suspend fun syncPendingListings() {
@@ -114,51 +105,11 @@ class ListingRepositoryImpl @Inject constructor(
                     )
                     null -> null
                 }
-
                 response?.let { dto ->
-                    dao.insertListing(
-                        entity.copy(
-                            id = dto.id,
-                            title = dto.title,
-                            description = dto.description,
-                            price = dto.price,
-                            imageUrl = dto.imageUrl,
-                            syncStatus = SyncStatus.SYNCED,
-                            pendingAction = null,
-                            updatedAt = dto.updatedAt
-                        )
-                    )
-                    if (dto.id != entity.id) {
-                        dao.deleteListing(entity.id)
-                    }
+                    dao.insertListing(dto.toSyncedEntity(entity))
+                    if (dto.id != entity.id) dao.deleteListing(entity.id)
                 }
-            } catch (_: Exception) {
-            }
+            } catch (_: Exception) { }
         }
     }
-
-    private fun ListingEntity.toListing() = Listing(
-        id = id,
-        title = title,
-        description = description,
-        price = price,
-        imageUrl = imageUrl,
-        localImagePath = localImagePath,
-        isFavorite = isFavorite,
-        syncStatus = syncStatus,
-        updatedAt = updatedAt
-    )
-
-    private fun Listing.toEntity() = ListingEntity(
-        id = id,
-        title = title,
-        description = description,
-        price = price,
-        imageUrl = imageUrl,
-        localImagePath = localImagePath,
-        isFavorite = isFavorite,
-        syncStatus = syncStatus,
-        pendingAction = null,
-        updatedAt = updatedAt
-    )
 }
