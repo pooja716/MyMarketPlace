@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,6 +36,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.example.mymarketplace.R
+import com.example.mymarketplace.ui.theme.Dimens
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,10 +91,10 @@ fun CreateListingScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("New Listing") },
+                title = { Text(stringResource(R.string.create_listing_title)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 }
             )
@@ -101,22 +104,22 @@ fun CreateListingScreen(
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = Dimens.size16)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(Dimens.size12)
         ) {
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(Dimens.size4))
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .height(Dimens.size200)
+                    .clip(RoundedCornerShape(Dimens.size12))
                     .border(
                         1.dp,
                         MaterialTheme.colorScheme.outlineVariant,
-                        RoundedCornerShape(12.dp)
+                        RoundedCornerShape(Dimens.size12)
                     )
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
@@ -127,23 +130,23 @@ fun CreateListingScreen(
                             .data(selectedImageUri)
                             .crossfade(true)
                             .build(),
-                        contentDescription = "Selected image",
+                        contentDescription = stringResource(R.string.cd_selected_image),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                        verticalArrangement = Arrangement.spacedBy(Dimens.size4)
                     ) {
                         Icon(
                             Icons.Default.Image,
                             contentDescription = null,
-                            modifier = Modifier.size(40.dp),
+                            modifier = Modifier.size(Dimens.size40),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            "No image selected",
+                            stringResource(R.string.no_image_selected),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -153,7 +156,7 @@ fun CreateListingScreen(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(Dimens.size8)
             ) {
                 OutlinedButton(
                     onClick = {
@@ -163,9 +166,9 @@ fun CreateListingScreen(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Image, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(6.dp))
-                    Text("Gallery")
+                    Icon(Icons.Default.Image, contentDescription = null, modifier = Modifier.size(Dimens.size18))
+                    Spacer(Modifier.width(Dimens.size6))
+                    Text(stringResource(R.string.btn_gallery))
                 }
                 OutlinedButton(
                     onClick = {
@@ -173,9 +176,9 @@ fun CreateListingScreen(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.AddAPhoto, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(6.dp))
-                    Text("Camera")
+                    Icon(Icons.Default.AddAPhoto, contentDescription = null, modifier = Modifier.size(Dimens.size18))
+                    Spacer(Modifier.width(Dimens.size6))
+                    Text(stringResource(R.string.btn_camera))
                 }
             }
 
@@ -184,14 +187,14 @@ fun CreateListingScreen(
                     onClick = { viewModel.clearImage() },
                     colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Text("Remove image")
+                    Text(stringResource(R.string.btn_remove_image))
                 }
             }
 
             OutlinedTextField(
                 value = title,
                 onValueChange = viewModel::onTitleChange,
-                label = { Text("Title *") },
+                label = { Text(stringResource(R.string.label_title)) },
                 isError = titleError != null,
                 supportingText = titleError?.let { { Text(it, color = MaterialTheme.colorScheme.error) } },
                 keyboardOptions = KeyboardOptions(
@@ -205,7 +208,7 @@ fun CreateListingScreen(
             OutlinedTextField(
                 value = description,
                 onValueChange = viewModel::onDescriptionChange,
-                label = { Text("Description *") },
+                label = { Text(stringResource(R.string.label_description)) },
                 isError = descriptionError != null,
                 supportingText = descriptionError?.let { { Text(it, color = MaterialTheme.colorScheme.error) } },
                 keyboardOptions = KeyboardOptions(
@@ -220,10 +223,10 @@ fun CreateListingScreen(
             OutlinedTextField(
                 value = price,
                 onValueChange = viewModel::onPriceChange,
-                label = { Text("Price (CAD) *") },
+                label = { Text(stringResource(R.string.label_price)) },
                 isError = priceError != null,
                 supportingText = priceError?.let { { Text(it, color = MaterialTheme.colorScheme.error) } },
-                prefix = { Text("$") },
+                prefix = { Text(stringResource(R.string.label_price_prefix)) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Done
@@ -232,25 +235,25 @@ fun CreateListingScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(Dimens.size4))
 
             Button(
                 onClick = viewModel::onSubmit,
                 enabled = !isLoading,
-                modifier = Modifier.fillMaxWidth().height(50.dp)
+                modifier = Modifier.fillMaxWidth().height(Dimens.size50)
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(Dimens.size20),
                         strokeWidth = 2.dp,
                         color = Color.White
                     )
                 } else {
-                    Text("Post Listing")
+                    Text(stringResource(R.string.btn_post_listing))
                 }
             }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(Dimens.size16))
         }
     }
 }

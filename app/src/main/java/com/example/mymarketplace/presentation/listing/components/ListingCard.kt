@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,8 +23,10 @@ import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.example.mymarketplace.R
 import com.example.mymarketplace.domain.model.Listing
 import com.example.mymarketplace.domain.model.SyncStatus
+import com.example.mymarketplace.ui.theme.Dimens
 
 @Composable
 fun ListingCard(
@@ -34,7 +37,7 @@ fun ListingCard(
     Card(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth().aspectRatio(0.75f),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(Dimens.size12),
         border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Box {
@@ -48,18 +51,18 @@ fun ListingCard(
                     .build(),
                 contentDescription = listing.title,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth().height(130.dp)
+                modifier = Modifier.fillMaxWidth().height(Dimens.size130)
             )
 
             if (listing.syncStatus != SyncStatus.SYNCED) {
                 Surface(
-                    modifier = Modifier.align(Alignment.TopStart).padding(6.dp),
-                    shape = RoundedCornerShape(4.dp),
+                    modifier = Modifier.align(Alignment.TopStart).padding(Dimens.size6),
+                    shape = RoundedCornerShape(Dimens.size4),
                     color = Color(0xFFFAC775)
                 ) {
                     Text(
-                        "PENDING",
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                        stringResource(R.string.badge_pending),
+                        modifier = Modifier.padding(horizontal = Dimens.size6, vertical = 2.dp),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontSize = 10.sp,
                             letterSpacing = 0.4.sp,
@@ -75,7 +78,7 @@ fun ListingCard(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(28.dp)
+                        .size(Dimens.size28)
                         .background(
                             MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
                             CircleShape
@@ -85,16 +88,17 @@ fun ListingCard(
                     Icon(
                         imageVector = if (listing.isFavorite) Icons.Default.Favorite
                         else Icons.Default.FavoriteBorder,
-                        contentDescription = if (listing.isFavorite) "Unfavorite" else "Favorite",
+                        contentDescription = if (listing.isFavorite) stringResource(R.string.cd_unfavorite)
+                        else stringResource(R.string.cd_favorite),
                         tint = if (listing.isFavorite) Color(0xFFD85A30)
                         else MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(Dimens.size16)
                     )
                 }
             }
         }
 
-        Column(Modifier.padding(start = 10.dp, end = 10.dp, top = 8.dp, bottom = 10.dp)) {
+        Column(Modifier.padding(start = 10.dp, end = 10.dp, top = Dimens.size8, bottom = 10.dp)) {
             Text(
                 listing.title,
                 maxLines = 1,
@@ -108,7 +112,7 @@ fun ListingCard(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(Dimens.size6))
             Text(
                 "$${listing.price}",
                 style = MaterialTheme.typography.titleSmall,

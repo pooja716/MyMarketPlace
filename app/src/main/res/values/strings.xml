@@ -1,3 +1,53 @@
 <resources>
     <string name="app_name">MyMarketPlace</string>
+
+    <!-- TopBar -->
+    <string name="topbar_title">Marketplace</string>
+    <string name="topbar_subtitle">200 listings</string>
+
+    <!-- Tabs -->
+    <string name="tab_all">All</string>
+    <string name="tab_favorites">Favorites</string>
+    <string name="tab_pending_sync">Pending sync</string>
+
+    <!-- Create Listing -->
+    <string name="create_listing_title">New Listing</string>
+    <string name="label_title">Title *</string>
+    <string name="label_description">Description *</string>
+    <string name="label_price">Price (CAD) *</string>
+    <string name="label_price_prefix">$</string>
+    <string name="btn_gallery">Gallery</string>
+    <string name="btn_camera">Camera</string>
+    <string name="btn_remove_image">Remove image</string>
+    <string name="btn_post_listing">Post Listing</string>
+    <string name="no_image_selected">No image selected</string>
+
+    <!-- Detail Screen -->
+    <string name="detail_title">Listing Details</string>
+    <string name="label_description_header">Description</string>
+    <string name="label_pending_sync">Pending sync</string>
+
+    <!-- Favorites -->
+    <string name="favorites_screen">Favorites Screen</string>
+
+    <!-- Sync Status Banner -->
+    <string name="banner_offline">Offline — changes will sync when reconnected</string>
+    <string name="banner_syncing">Syncing pending items…</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_back">Back</string>
+    <string name="cd_create_listing">Create listing</string>
+    <string name="cd_selected_image">Selected image</string>
+    <string name="cd_favorite">Favorite</string>
+    <string name="cd_unfavorite">Unfavorite</string>
+
+    <!-- ListingCard -->
+    <string name="badge_pending">PENDING</string>
+
+    <!-- TopBar -->
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+
+    <!-- ListingsScreen -->
+    <string name="showing_listings">Showing %1$d of %2$d listings</string>
 </resources>

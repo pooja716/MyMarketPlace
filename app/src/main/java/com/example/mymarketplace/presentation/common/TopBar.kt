@@ -8,7 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.mymarketplace.R
+import com.example.mymarketplace.ui.theme.Dimens
 
 @Composable
 fun TopBar(isOnline: Boolean) {
@@ -18,20 +21,22 @@ fun TopBar(isOnline: Boolean) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            Text("Marketplace", style = MaterialTheme.typography.titleMedium)
-            Text("200 listings",
+            Text(stringResource(R.string.topbar_title), style = MaterialTheme.typography.titleMedium)
+            Text(
+                stringResource(R.string.topbar_subtitle),
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.size6)) {
             Box(
-                Modifier.size(8.dp).background(
+                Modifier.size(Dimens.size8).background(
                     color = if (isOnline) Color(0xFF1D9E75) else Color(0xFFE24B4A),
                     shape = CircleShape
                 )
             )
             Text(
-                if (isOnline) "Online" else "Offline",
+                if (isOnline) stringResource(R.string.status_online) else stringResource(R.string.status_offline),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

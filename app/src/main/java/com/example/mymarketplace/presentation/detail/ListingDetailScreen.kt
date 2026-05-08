@@ -24,13 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.example.mymarketplace.R
 import com.example.mymarketplace.domain.model.SyncStatus
+import com.example.mymarketplace.ui.theme.Dimens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,10 +51,10 @@ fun ListingDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Listing Details") },
+                title = { Text(stringResource(R.string.detail_title)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
@@ -59,7 +62,7 @@ fun ListingDetailScreen(
                         IconButton(onClick = { viewModel.onFavoriteToggle(l.id) }) {
                             Icon(
                                 imageVector = if (l.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                contentDescription = if (l.isFavorite) "Unfavorite" else "Favorite",
+                                contentDescription = if (l.isFavorite) stringResource(R.string.cd_unfavorite) else stringResource(R.string.cd_favorite),
                                 tint = if (l.isFavorite) Color(0xFFD85A30) else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -89,10 +92,10 @@ fun ListingDetailScreen(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(260.dp)
+                        .height(Dimens.size260)
                 )
 
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(Modifier.padding(Dimens.size16), verticalArrangement = Arrangement.spacedBy(Dimens.size8)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -112,12 +115,12 @@ fun ListingDetailScreen(
 
                     if (item.syncStatus != SyncStatus.SYNCED) {
                         Surface(
-                            shape = RoundedCornerShape(4.dp),
+                            shape = RoundedCornerShape(Dimens.size4),
                             color = Color(0xFFFAC775)
                         ) {
                             Text(
-                                "Pending sync",
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                stringResource(R.string.label_pending_sync),
+                                modifier = Modifier.padding(horizontal = Dimens.size8, vertical = Dimens.size4),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = Color(0xFF633806)
                             )
@@ -127,7 +130,7 @@ fun ListingDetailScreen(
                     HorizontalDivider()
 
                     Text(
-                        "Description",
+                        stringResource(R.string.label_description_header),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

@@ -6,7 +6,7 @@ import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.mymarketplace.data.sync.SyncWorker
+import com.example.mymarketplace.data.service.SyncWorker
 import com.example.mymarketplace.domain.model.Listing
 import com.example.mymarketplace.domain.usecase.ObserveListingsUseCase
 import com.example.mymarketplace.domain.usecase.RefreshListingsUseCase

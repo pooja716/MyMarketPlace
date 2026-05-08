@@ -1,4 +1,4 @@
-package com.example.mymarketplace.navigation
+package com.example.mymarketplace.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType

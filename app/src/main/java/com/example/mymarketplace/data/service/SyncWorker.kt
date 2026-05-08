@@ -1,4 +1,4 @@
-package com.example.mymarketplace.data.sync
+package com.example.mymarketplace.data.service
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
