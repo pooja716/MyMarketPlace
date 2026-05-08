@@ -4,8 +4,8 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mymarketplace.domain.model.CreateListingInput
-import com.example.mymarketplace.domain.repository.ListingRepository
 import com.example.mymarketplace.domain.usecase.CreateListingUseCase
+import com.example.mymarketplace.domain.usecase.SyncPendingListingsUseCase
 import com.example.mymarketplace.util.ConnectivityObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateListingViewModel @Inject constructor(
     private val createListingUseCase: CreateListingUseCase,
-    private val repository: ListingRepository,
+    private val syncPendingListings: SyncPendingListingsUseCase,
     private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
@@ -93,7 +93,7 @@ class CreateListingViewModel @Inject constructor(
             createListingUseCase(input)
                 .onSuccess {
                     if (connectivityObserver.isOnline()) {
-                        repository.syncPendingListings()
+                        syncPendingListings()
                     }
                     _events.send(CreateListingEvent.Success)
                 }

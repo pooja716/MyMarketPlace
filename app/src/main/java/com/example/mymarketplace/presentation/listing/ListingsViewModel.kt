@@ -8,8 +8,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.mymarketplace.data.sync.SyncWorker
 import com.example.mymarketplace.domain.model.Listing
-import com.example.mymarketplace.domain.repository.ListingRepository
 import com.example.mymarketplace.domain.usecase.ObserveListingsUseCase
+import com.example.mymarketplace.domain.usecase.RefreshListingsUseCase
+import com.example.mymarketplace.domain.usecase.SyncPendingListingsUseCase
 import com.example.mymarketplace.domain.usecase.ToggleFavoriteUseCase
 import com.example.mymarketplace.presentation.common.UiSyncStatus
 import com.example.mymarketplace.util.ConnectivityObserver
@@ -22,7 +23,8 @@ import javax.inject.Inject
 class ListingsViewModel @Inject constructor(
     private val observeListings: ObserveListingsUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
-    private val repository: ListingRepository,
+    private val refreshListings: RefreshListingsUseCase,
+    private val syncPendingListings: SyncPendingListingsUseCase,
     private val connectivityObserver: ConnectivityObserver,
     private val workManager: WorkManager
 ) : ViewModel() {
@@ -42,7 +44,7 @@ class ListingsViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            repository.refreshListings()
+            refreshListings()
             if (connectivityObserver.isOnline()) {
                 runSync()
             }
@@ -77,7 +79,7 @@ class ListingsViewModel @Inject constructor(
 
     private suspend fun runSync() {
         _syncStatus.value = UiSyncStatus.SYNCING
-        repository.syncPendingListings()
+        syncPendingListings()
         _syncStatus.value = UiSyncStatus.IDLE
     }
 }
